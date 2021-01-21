@@ -5,11 +5,13 @@ const app = express();
 const mysql = require("mysql");
 
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "layfamilytreedb",
+  host: "eu-cdbr-west-03.cleardb.net",
+  user: "bc3aaba7b6280c",
+  password: "b329b020",
+  database: "heroku_faf3e48bab52a90",
 });
+
+
 
 app.use(cors());
 app.use(express.json());
@@ -76,6 +78,6 @@ app.put("/api/update", (req, res) => {
   );
 });
 
-app.listen(3001, () => {
-  console.log("running on port 3001");
+app.listen(process.env.PORT || PORT, () => {
+  console.log(`running on port ${PORT}`);
 });
