@@ -11,8 +11,6 @@ const db = mysql.createPool({
   database: "heroku_faf3e48bab52a90",
 });
 
-
-
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -26,20 +24,22 @@ app.get("/api/get", (req, res) => {
 });
 
 app.post("/api/insert", (req, res) => {
-  var pidInput = req.body.pid;
-  const generationInput = req.body.generation;
-  const nameInput = req.body.name;
-  const birthdateInput = req.body.birthdate;
+  var node = req.body;
 
-  if (pidInput === "") pidInput = 0;
-
-  res.send("working!");
+  if (node.pid === "") node.pid = 0;
 
   const sqlInsert =
-    "INSERT INTO `familymembers` (`pid`, `generation`, `name`, `birthdate`) VALUES (?,?,?,?);";
+    "INSERT INTO `familymembers` (`pid`, `generation`, `name`, `birthdate`, `parent`, `partner`) VALUES (?,?,?,?,?,?);";
   db.query(
     sqlInsert,
-    [pidInput, generationInput, nameInput, birthdateInput],
+    [
+      node.pid,
+      node.generation,
+      node.name,
+      node.birthdate,
+      node.parent,
+      node.partner,
+    ],
     (err, result) => {
       console.log(err);
       console.log(result);
@@ -58,19 +58,22 @@ app.post("/api/delete", (req, res) => {
 });
 
 app.put("/api/update", (req, res) => {
-  const id = req.body.id;
-  const generation = req.body.generation;
-  const name = req.body.name;
-  const birthdate = req.body.birthdate;
-  const pid = req.body.pid;
-  const isPartner = req.body.isPartner;
-  console.log(`${id} ${generation} ${name} ${birthdate} ${pid} ${isPartner}`)
+  let node = req.body;
+  console.log(node);
   let sqlUpdate =
-    "UPDATE `familymembers` SET generation = ?, name = ?, birthdate = ?, pid = ?, isPartner = ? WHERE id = ?";
-  console.log("activated");
+    "UPDATE `familymembers` SET generation = ?, name = ?, birthdate = ?, pid = ?, isPartner = ?, parent = ?, partner = ? WHERE id = ?";
   db.query(
     sqlUpdate,
-    [generation, name, birthdate, pid, isPartner, id],
+    [
+      node.generation,
+      node.name,
+      node.birthdate,
+      node.pid,
+      node.isPartner,
+      node.parent,
+      node.partner,
+      node.id,
+    ],
     (err, result) => {
       console.log(err);
       console.log(result);
@@ -79,6 +82,6 @@ app.put("/api/update", (req, res) => {
 });
 
 var port = process.env.PORT || 5000;
-app.listen(port, function() {
+app.listen(port, function () {
   console.log("Listening on " + port);
 });
