@@ -78,6 +78,6 @@ app.put("/api/update", (req, res) => {
   );
 });
 
-app.listen(process.env.PORT || PORT, () => {
+app.listen( PORT, () => {
   console.log(`running on port ${PORT}`);
 });
