@@ -43,6 +43,8 @@ app.post("/api/insert", (req, res) => {
     (err, result) => {
       console.log(err);
       console.log(result);
+      res.send(err);
+      res.send(result);
     }
   );
 });
@@ -54,6 +56,8 @@ app.post("/api/delete", (req, res) => {
   db.query(sqlDelete, [id], (err, result) => {
     console.log(err);
     console.log(result);
+    res.send(err);
+    res.send(result);
   });
 });
 
@@ -77,6 +81,8 @@ app.put("/api/update", (req, res) => {
     (err, result) => {
       console.log(err);
       console.log(result);
+      res.send(err);
+      res.send(result);
     }
   );
 });
