@@ -5,10 +5,10 @@ const app = express();
 const mysql = require("mysql");
 
 const db = mysql.createPool({
-  host: "eu-cdbr-west-03.cleardb.net",
-  user: "b7c8f3e72edffb",
-  password: "d02605ff",
-  database: "heroku_a335746522f3d45",
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: "layfamilytreedb",
 });
 
 app.use(cors());
@@ -43,8 +43,6 @@ app.post("/api/insert", (req, res) => {
     (err, result) => {
       console.log(err);
       console.log(result);
-      res.send(err);
-      res.send(result);
     }
   );
 });
@@ -56,8 +54,6 @@ app.post("/api/delete", (req, res) => {
   db.query(sqlDelete, [id], (err, result) => {
     console.log(err);
     console.log(result);
-    res.send(err);
-    res.send(result);
   });
 });
 
@@ -81,8 +77,6 @@ app.put("/api/update", (req, res) => {
     (err, result) => {
       console.log(err);
       console.log(result);
-      res.send(err);
-      res.send(result);
     }
   );
 });
