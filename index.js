@@ -26,7 +26,7 @@ app.get("/api/get", (req, res) => {
 app.post("/api/insert", (req, res) => {
   var node = req.body;
 
-  if (node.pid === "") node.pid = null;
+  if (node.pid === "") node.pid = 0;
 
   const sqlInsert =
     "INSERT INTO `familymembers` (`pid`, `generation`, `name`, `birthdate`, `parent`, `partner`) VALUES (?,?,?,?,?,?);";
