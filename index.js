@@ -11,15 +11,11 @@ const db = mysql.createPool({
   database: "heroku_faf3e48bab52a90",
 });
 
-var corsOptions = {
-  origin: "http://layfamilytree.netlify.app",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/api/get", cors(corsOptions), (req, res) => {
+app.get("/api/get", (req, res) => {
   const sqlSelect = "Select * from familymembers";
   db.query(sqlSelect, (err, result) => {
     console.log("data sent to frontend");
@@ -27,7 +23,7 @@ app.get("/api/get", cors(corsOptions), (req, res) => {
   });
 });
 
-app.post("/api/insert", cors(corsOptions), (req, res) => {
+app.post("/api/insert", (req, res) => {
   var node = req.body;
 
   if (node.pid === "") node.pid = null;
@@ -51,7 +47,7 @@ app.post("/api/insert", cors(corsOptions), (req, res) => {
   );
 });
 
-app.post("/api/delete", cors(corsOptions), (req, res) => {
+app.post("/api/delete", (req, res) => {
   const id = req.body.id;
   console.log(id);
   let sqlDelete = "DELETE  FROM `familymembers` WHERE id = ?";
@@ -61,7 +57,7 @@ app.post("/api/delete", cors(corsOptions), (req, res) => {
   });
 });
 
-app.put("/api/update", cors(corsOptions), (req, res) => {
+app.put("/api/update", (req, res) => {
   let node = req.body;
   console.log(node);
   let sqlUpdate =
