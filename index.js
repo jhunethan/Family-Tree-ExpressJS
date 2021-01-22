@@ -5,10 +5,10 @@ const app = express();
 const mysql = require("mysql");
 
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "layfamilytreedb",
+  host: "eu-cdbr-west-03.cleardb.net",
+  user: "bc3aaba7b6280c",
+  password: "b329b020",
+  database: "heroku_faf3e48bab52a90",
 });
 
 app.use(cors());
@@ -26,7 +26,7 @@ app.get("/api/get", (req, res) => {
 app.post("/api/insert", (req, res) => {
   var node = req.body;
 
-  if (node.pid === "") node.pid = 0;
+  if (node.pid === "") node.pid = null;
 
   const sqlInsert =
     "INSERT INTO `familymembers` (`pid`, `generation`, `name`, `birthdate`, `parent`, `partner`) VALUES (?,?,?,?,?,?);";
