@@ -6,9 +6,9 @@ const mysql = require("mysql");
 
 const db = mysql.createPool({
   host: "eu-cdbr-west-03.cleardb.net",
-  user: "bc3aaba7b6280c",
-  password: "b329b020",
-  database: "heroku_faf3e48bab52a90",
+  user: "b7c8f3e72edffb",
+  password: "d02605ff",
+  database: "heroku_a335746522f3d45",
 });
 
 app.use(cors());
