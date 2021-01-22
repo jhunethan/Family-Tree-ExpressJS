@@ -4,12 +4,20 @@ const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
 
+// const db = mysql.createPool({
+//   host: "eu-cdbr-west-03.cleardb.net",
+//   user: "bc3aaba7b6280c",
+//   password: "b329b020",
+//   database: "heroku_faf3e48bab52a90",
+// });
+
 const db = mysql.createPool({
-  host: "eu-cdbr-west-03.cleardb.net",
-  user: "bc3aaba7b6280c",
-  password: "b329b020",
-  database: "heroku_faf3e48bab52a90",
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: "layfamilytreedb",
 });
+
 
 app.use(cors());
 app.use(express.json());
