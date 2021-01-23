@@ -4,19 +4,19 @@ const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
 
-// const db = mysql.createPool({
-//   host: "eu-cdbr-west-03.cleardb.net",
-//   user: "bc3aaba7b6280c",
-//   password: "b329b020",
-//   database: "heroku_faf3e48bab52a90",
-// });
-
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "layfamilytreedb",
+  host: "eu-cdbr-west-03.cleardb.net",
+  user: "bc3aaba7b6280c",
+  password: "b329b020",
+  database: "heroku_faf3e48bab52a90",
 });
+
+// const db = mysql.createPool({
+//   host: "localhost",
+//   user: "root",
+//   password: "password",
+//   database: "layfamilytreedb",
+// });
 
 
 app.use(cors());
@@ -24,6 +24,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/api/get", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   const sqlSelect = "Select * from familymembers";
   db.query(sqlSelect, (err, result) => {
     console.log("data sent to frontend");
@@ -32,6 +33,7 @@ app.get("/api/get", (req, res) => {
 });
 
 app.post("/api/insert", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   var node = req.body;
 
   if (node.pid === "") node.pid = null;
@@ -56,6 +58,7 @@ app.post("/api/insert", (req, res) => {
 });
 
 app.post("/api/delete", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   const id = req.body.id;
   console.log(id);
   let sqlDelete = "DELETE  FROM `familymembers` WHERE id = ?";
@@ -66,6 +69,7 @@ app.post("/api/delete", (req, res) => {
 });
 
 app.put("/api/update", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   let node = req.body;
   console.log(node);
   let sqlUpdate =
