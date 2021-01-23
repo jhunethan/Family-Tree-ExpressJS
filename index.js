@@ -17,7 +17,6 @@ const db = mysql.createPool({
 //   password: "password",
 //   database: "layfamilytreedb",
 // });
-mysql://b7c8f3e72edffb:d02605ff@eu-cdbr-west-03.cleardb.net/heroku_a335746522f3d45?reconnect=true
 
 app.use(cors());
 app.use(express.json());
