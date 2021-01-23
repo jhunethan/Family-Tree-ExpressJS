@@ -1,24 +1,24 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
 
-const db = mysql.createPool({
-  host: "eu-cdbr-west-03.cleardb.net",
-  user: "b7c8f3e72edffb",
-  password: "d02605ff",
-  database: "heroku_a335746522f3d45",
-});
-
 // const db = mysql.createPool({
-//   host: "localhost",
-//   user: "root",
-//   password: "password",
-//   database: "layfamilytreedb",
+//   host: "eu-cdbr-west-03.cleardb.net",
+//   user: "b7c8f3e72edffb",
+//   password: "d02605ff",
+//   database: "heroku_a335746522f3d45",
 // });
 
+const db = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: "layfamilytreedb",
+});
 
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -50,7 +50,7 @@ app.post("/api/insert", (req, res) => {
     }
 
     if (exists === false) {
-      if (node.pid === "") node.pid = null;
+      if (node.pid === "") node.pid = 0;
 
       const sqlInsert =
         "INSERT INTO `familymembers` (`pid`, `generation`, `name`, `birthdate`, `parent`, `partner`) VALUES (?,?,?,?,?,?);";
