@@ -4,19 +4,19 @@ const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
 
-// const db = mysql.createPool({
-//   host: "eu-cdbr-west-03.cleardb.net",
-//   user: "b7c8f3e72edffb",
-//   password: "d02605ff",
-//   database: "heroku_a335746522f3d45",
-// });
-
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "layfamilytreedb",
+  host: "eu-cdbr-west-03.cleardb.net",
+  user: "b7c8f3e72edffb",
+  password: "d02605ff",
+  database: "heroku_a335746522f3d45",
 });
+
+// const db = mysql.createPool({
+//   host: "localhost",
+//   user: "root",
+//   password: "password",
+//   database: "layfamilytreedb",
+// });
 
 app.use(cors());
 app.use(express.json());
@@ -26,11 +26,6 @@ app.get("/api/get", (req, res) => {
   const sqlSelect = "Select * from familymembers";
   db.query(sqlSelect, (err, result) => {
     console.log("data sent to frontend");
-    res.set({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-      "Access-Control-Allow-Headers": "content-type",
-    });
     res.send(result);
   });
 });
@@ -74,11 +69,6 @@ app.post("/api/delete", (req, res) => {
   db.query(sqlDelete, [id], (err, result) => {
     console.log(err);
     console.log(result);
-    res.set({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-      "Access-Control-Allow-Headers": "content-type",
-    });
   });
 });
 
@@ -102,11 +92,6 @@ app.put("/api/update", (req, res) => {
     (err, result) => {
       console.log(err);
       console.log(result);
-      res.set({
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-        "Access-Control-Allow-Headers": "content-type",
-      });
     }
   );
 });
