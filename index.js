@@ -32,34 +32,45 @@ app.get("/api/get", (req, res) => {
 
 app.post("/api/insert", (req, res) => {
   var node = req.body;
-  const sqlSelect =
-    "SELECT id from familymembers WHERE name = ?, birthdate = ?";
-
-  if (node.pid === "") node.pid = null;
-
-  const sqlInsert =
-    "INSERT INTO `familymembers` (`pid`, `generation`, `name`, `birthdate`, `parent`, `partner`) VALUES (?,?,?,?,?,?);";
-  db.query(
-    sqlInsert,
-    [
-      node.pid,
-      node.generation,
-      node.name,
-      node.birthdate,
-      node.parent,
-      node.partner,
-    ],
-    (err, result) => {
-      res.set({
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-        "Access-Control-Allow-Headers": "content-type",
-      });
-
-      console.log(err);
-      console.log(result);
+  var exists = false;
+  const sqlSelect = "SELECT * from familymembers WHERE name = ?";
+  db.query(sqlSelect, [node.name], (err, result) => {
+    try {
+      for (let i = 0; i < result.length; i++) {
+        if (
+          result[i].birthdate === node.birthdate &&
+          result[i].generation === node.generation
+        ) {
+          exists = true;
+          console.log("entry exists");
+        }
+      }
+    } catch {
+      exists = false;
     }
-  );
+
+    if (exists === false) {
+      if (node.pid === "") node.pid = null;
+
+      const sqlInsert =
+        "INSERT INTO `familymembers` (`pid`, `generation`, `name`, `birthdate`, `parent`, `partner`) VALUES (?,?,?,?,?,?);";
+      db.query(
+        sqlInsert,
+        [
+          node.pid,
+          node.generation,
+          node.name,
+          node.birthdate,
+          node.parent,
+          node.partner,
+        ],
+        (err, result) => {
+          console.log(err);
+          console.log(result);
+        }
+      );
+    }
+  });
 });
 
 app.post("/api/delete", (req, res) => {
