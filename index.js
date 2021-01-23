@@ -35,7 +35,7 @@ app.get("/api/get", (req, res) => {
   });
 });
 
-app.post("/api/insert", (req, res) => {
+app.get("/api/insert", (req, res) => {
   var node = req.body;
   const sqlSelect =
     "SELECT id from familymembers WHERE name = ?, birthdate = ?";
@@ -67,7 +67,7 @@ app.post("/api/insert", (req, res) => {
   );
 });
 
-app.post("/api/delete", (req, res) => {
+app.get("/api/delete", (req, res) => {
   const id = req.body.id;
   console.log(id);
   let sqlDelete = "DELETE  FROM `familymembers` WHERE id = ?";
@@ -82,7 +82,7 @@ app.post("/api/delete", (req, res) => {
   });
 });
 
-app.put("/api/update", (req, res) => {
+app.get("/api/update", (req, res) => {
   let node = req.body;
   console.log(node);
   let sqlUpdate =
