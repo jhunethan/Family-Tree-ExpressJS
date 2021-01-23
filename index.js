@@ -26,12 +26,19 @@ app.get("/api/get", (req, res) => {
   const sqlSelect = "Select * from familymembers";
   db.query(sqlSelect, (err, result) => {
     console.log("data sent to frontend");
+    res.set({
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+      "Access-Control-Allow-Headers": "content-type",
+    });
     res.send(result);
   });
 });
 
 app.post("/api/insert", (req, res) => {
   var node = req.body;
+  const sqlSelect =
+    "SELECT id from familymembers WHERE name = ?, birthdate = ?";
 
   if (node.pid === "") node.pid = null;
 
@@ -48,6 +55,12 @@ app.post("/api/insert", (req, res) => {
       node.partner,
     ],
     (err, result) => {
+      res.set({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+        "Access-Control-Allow-Headers": "content-type",
+      });
+
       console.log(err);
       console.log(result);
     }
@@ -61,6 +74,11 @@ app.post("/api/delete", (req, res) => {
   db.query(sqlDelete, [id], (err, result) => {
     console.log(err);
     console.log(result);
+    res.set({
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+      "Access-Control-Allow-Headers": "content-type",
+    });
   });
 });
 
@@ -84,6 +102,11 @@ app.put("/api/update", (req, res) => {
     (err, result) => {
       console.log(err);
       console.log(result);
+      res.set({
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+        "Access-Control-Allow-Headers": "content-type",
+      });
     }
   );
 });
