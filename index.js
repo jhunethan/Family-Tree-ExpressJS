@@ -89,23 +89,27 @@ app.put("/api/update", (req, res) => {
   console.log(node);
   let sqlUpdate =
     "UPDATE `familymembers` SET generation = ?, name = ?, birthdate = ?, pid = ?, isPartner = ?, parent = ?, partner = ? WHERE id = ?";
-  db.query(
-    sqlUpdate,
-    [
-      node.generation,
-      node.name,
-      node.birthdate,
-      node.pid,
-      node.isPartner,
-      node.parent,
-      node.partner,
-      node.id,
-    ],
-    (err, result) => {
-      console.log(err);
-      console.log(result);
-    }
-  );
+
+  //invisible root node is uneditable
+  if (node.id !== 0) {
+    db.query(
+      sqlUpdate,
+      [
+        node.generation,
+        node.name,
+        node.birthdate,
+        node.pid,
+        node.isPartner,
+        node.parent,
+        node.partner,
+        node.id,
+      ],
+      (err, result) => {
+        console.log(err);
+        console.log(result);
+      }
+    );
+  }
 });
 
 var port = process.env.PORT || 5000;
