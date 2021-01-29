@@ -4,13 +4,6 @@ const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
 
-const db = mysql.createPool({
-  host: "eu-cdbr-west-03.cleardb.net",
-  user: "b7c8f3e72edffb",
-  password: "d02605ff",
-  database: "heroku_a335746522f3d45",
-});
-
 // const db = mysql.createPool({
 //   host: "localhost",
 //   user: "root",
@@ -18,7 +11,21 @@ const db = mysql.createPool({
 //   database: "layfamilytreedb",
 // });
 
-app.use(cors());
+const db = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: "layfamilytreedb",
+});
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -84,7 +91,7 @@ app.post("/api/delete", (req, res) => {
   });
 });
 
-app.put("/api/update", (req, res) => {
+app.post("/api/update", (req, res) => {
   let node = req.body;
   console.log(node);
   let sqlUpdate =
@@ -107,6 +114,35 @@ app.put("/api/update", (req, res) => {
       (err, result) => {
         console.log(err);
         console.log(result);
+      }
+    );
+  }
+});
+
+app.post("/api/updateextra", (req, res) => {
+  let node = req.body;
+  console.log(node);
+  let sqlWrite =
+    "INSERT INTO `extradetails` (`id`, `location`, `extranames`, `fblink`, `description`) VALUES (?,?,?,?,?);";
+  //invisible root node is uneditable
+  if (node.id !== 0) {
+    db.query(
+      sqlWrite,
+      [node.id, node.location, node.extranames, node.fblink, node.description],
+      (err, result) => {
+        console.log(err);
+        console.log(result);
+        if (err) {
+          let sqlUpdate =
+            "UPDATE `extradetails` SET location = ?, extranames = ?, fblink = ?, description = ? WHERE id = ?;";
+          db.query(sqlUpdate, [
+            node.location,
+            node.extranames,
+            node.fblink,
+            node.description,
+            node.id,
+          ]);
+        }
       }
     );
   }
