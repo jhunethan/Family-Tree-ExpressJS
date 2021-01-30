@@ -12,10 +12,10 @@ const mysql = require("mysql");
 // });
 
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "layfamilytreedb",
+  host: "eu-cdbr-west-03.cleardb.net",
+  user: "b7c8f3e72edffb",
+  password: "d02605ff",
+  database: "heroku_a335746522f3d45",
 });
 
 app.use(function (req, res, next) {
@@ -34,6 +34,7 @@ app.get("/api/get", (req, res) => {
   db.query(sqlSelect, (err, result) => {
     console.log("data sent to frontend");
     res.send(result);
+    res.end();
   });
 });
 
@@ -79,6 +80,7 @@ app.post("/api/insert", (req, res) => {
       );
     }
   });
+  res.end();
 });
 
 app.post("/api/delete", (req, res) => {
@@ -88,6 +90,7 @@ app.post("/api/delete", (req, res) => {
   db.query(sqlDelete, [id], (err, result) => {
     console.log(err);
     console.log(result);
+    res.end();
   });
 });
 
@@ -114,6 +117,7 @@ app.post("/api/update", (req, res) => {
       (err, result) => {
         console.log(err);
         console.log(result);
+        res.end();
       }
     );
   }
@@ -146,6 +150,7 @@ app.post("/api/updateextra", (req, res) => {
       }
     );
   }
+  res.end();
 });
 
 var port = process.env.PORT || 5000;
