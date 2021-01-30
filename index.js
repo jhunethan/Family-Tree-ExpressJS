@@ -12,10 +12,10 @@ const mysql = require("mysql");
 // });
 
 const db = mysql.createPool({
-  host: "ec2-52-31-233-101.eu-west-1.compute.amazonaws.com",
+  host: "eu-cdbr-west-03.cleardb.net",
   user: "b7c8f3e72edffb",
-  password: "00dbe4dd46deb9fc087e0580b5afdac19cf18c4fac909c0086da52146dfa3b63",
-  database: "dbakv8t2f2cfkk",
+  password: "d02605ff",
+  database: "heroku_a335746522f3d45",
 });
 
 app.use(cors());
@@ -146,7 +146,7 @@ app.post("/api/updateextra", (req, res) => {
   res.end();
 });
 
-var port = process.env.PORT || 5432;
+var port = process.env.PORT || 5000;
 app.listen(port, function () {
   console.log("Listening on " + port);
 });
