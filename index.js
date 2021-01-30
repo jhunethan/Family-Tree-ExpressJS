@@ -31,6 +31,15 @@ app.get("/api/get", (req, res) => {
   });
 });
 
+app.get("/api/getextra", (req, res) => {
+  const sqlSelect = "Select * from extradetails";
+  db.query(sqlSelect, (err, result) => {
+    console.log("data sent to frontend");
+    res.send(result);
+    res.end();
+  });
+});
+
 app.post("/api/insert", (req, res) => {
   var node = req.body;
   var exists = false;
