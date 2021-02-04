@@ -180,9 +180,7 @@ app.post("/api/updateextra", (req, res) => {
         node.birthplace,
       ],
       (err, result) => {
-        console.log(err);
-        console.log(result);
-        if (err) {
+        if (err !== null) {
           let sqlUpdate =
             "UPDATE `extradetails` SET location = ?, extranames = ?, fblink = ?, description = ?, birthplace = ? WHERE id = ?;";
           db.query(sqlUpdate, [
