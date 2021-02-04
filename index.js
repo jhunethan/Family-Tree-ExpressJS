@@ -104,21 +104,6 @@ app.post("/api/insert", (req, res) => {
     }
   });
 
-  let time = getTime();
-  let method = "edit";
-  //write to edit history
-  const sqlInsertHistory =
-    "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,?,?,?,?);";
-  db.query(
-    sqlInsertHistory,
-    [node.id, time, node.author, node.changes, method],
-    (err, result) => {
-      console.log(err);
-      console.log(result);
-      res.send(result);
-    }
-  );
-
   res.end();
 });
 
@@ -156,6 +141,21 @@ app.post("/api/update", (req, res) => {
       (err, result) => {
         console.log(err);
         console.log(result);
+
+        let time = getTime();
+        let method = "edit";
+        //write to edit history
+        const sqlInsertHistory =
+          "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,?,?,?,?);";
+        db.query(
+          sqlInsertHistory,
+          [node.id, time, node.author, node.changes, method],
+          (err, result) => {
+            console.log(err);
+            console.log(result);
+          }
+        );
+
         res.end();
       }
     );
@@ -196,6 +196,21 @@ app.post("/api/updateextra", (req, res) => {
         }
       }
     );
+
+    let time = getTime();
+    let method = "editextra";
+    //write to edit history
+    const sqlInsertHistory =
+      "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,?,?,?,?);";
+    db.query(
+      sqlInsertHistory,
+      [node.id, time, node.author, node.changes, method],
+      (err, result) => {
+        console.log(err);
+        console.log(result);
+      }
+    );    
+    
   }
   res.end();
 });
