@@ -40,6 +40,26 @@ app.get("/api/getextra", (req, res) => {
   });
 });
 
+const getTime = () => {
+  // current timestamp in milliseconds
+  let ts = Date.now();
+
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours();
+  let minutes = date_ob.getMinutes();
+
+  if (date < 10) date = "0" + date;
+  if (month < 10) month = "0" + month;
+
+  // prints date & time in YYYY-MM-DD format
+  return (
+    date + "-" + month + "-" + year + ":" + "[" + hours + ":" + minutes + "]"
+  );
+};
+
 app.post("/api/insert", (req, res) => {
   var node = req.body;
   var exists = false;
@@ -83,6 +103,21 @@ app.post("/api/insert", (req, res) => {
       );
     }
   });
+
+  let time = getTime();
+  let method = "edit";
+  //write to edit history
+  const sqlInsert =
+    "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,?,?,?,?);";
+  db.query(
+    sqlInsert,
+    [node.id, time, node.author, node.changes, method],
+    (err, result) => {
+      console.log(err);
+      console.log(result);
+    }
+  );
+
   res.end();
 });
 
