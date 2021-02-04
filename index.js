@@ -101,6 +101,23 @@ app.post("/api/insert", (req, res) => {
           console.log(result);
         }
       );
+
+      let time = getTime();
+      let method = "create";
+      let changes = `${node.name}`;
+
+      //write to edit history
+      const sqlInsertHistory =
+        "INSERT INTO `edithistory` (`time`, `author`, `changes`, `method`) VALUES (?,?,?,?);";
+      db.query(
+        sqlInsertHistory,
+        [time, node.author, changes, method],
+        (err, result) => {
+          console.log("edithistory")
+          console.log(err);
+          console.log(result);
+        }
+      );
     }
   });
 
@@ -207,8 +224,7 @@ app.post("/api/updateextra", (req, res) => {
         console.log(err);
         console.log(result);
       }
-    );    
-    
+    );
   }
   res.end();
 });
