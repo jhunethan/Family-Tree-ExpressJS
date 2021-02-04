@@ -115,6 +115,7 @@ app.post("/api/insert", (req, res) => {
     (err, result) => {
       console.log(err);
       console.log(result);
+      res.send(result);
     }
   );
 
