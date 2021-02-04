@@ -31,7 +31,16 @@ app.get("/api/get", (req, res) => {
   });
 });
 
-app.get("/api/getextra", (req, res) => {
+app.get("/api/get/edithistory", (req, res) => {
+  const sqlSelect = "Select * from edithistory";
+  db.query(sqlSelect, (err, result) => {
+    console.log("data sent to frontend");
+    res.send(result);
+    res.end();
+  });
+});
+
+app.get("/api/get/extra", (req, res) => {
   const sqlSelect = "Select * from extradetails";
   db.query(sqlSelect, (err, result) => {
     console.log("data sent to frontend");
@@ -53,6 +62,8 @@ const getTime = () => {
 
   if (date < 10) date = "0" + date;
   if (month < 10) month = "0" + month;
+  if (hours < 10) hours = "0" + hours;
+  if (minutes < 10) minutes = "0" + minutes;
 
   // prints date & time in YYYY-MM-DD format
   return (
@@ -113,7 +124,6 @@ app.post("/api/insert", (req, res) => {
         sqlInsertHistory,
         [time, node.author, changes, method],
         (err, result) => {
-          console.log("edithistory")
           console.log(err);
           console.log(result);
         }
@@ -133,6 +143,21 @@ app.post("/api/delete", (req, res) => {
     console.log(result);
     res.end();
   });
+
+  let time = getTime();
+  let method = "delete";
+
+  //write to edit history
+  const sqlInsertHistory =
+    "INSERT INTO `edithistory` (`id`,`time`, `author`, `method`) VALUES (?,?,?,?);";
+  db.query(
+    sqlInsertHistory,
+    [id, time, req.body.author, method],
+    (err, result) => {
+      console.log(err);
+      console.log(result);
+    }
+  );
 });
 
 app.post("/api/update", (req, res) => {
