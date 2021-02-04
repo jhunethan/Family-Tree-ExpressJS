@@ -107,10 +107,10 @@ app.post("/api/insert", (req, res) => {
   let time = getTime();
   let method = "edit";
   //write to edit history
-  const sqlInsert =
+  const sqlInsertHistory =
     "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,?,?,?,?);";
   db.query(
-    sqlInsert,
+    sqlInsertHistory,
     [node.id, time, node.author, node.changes, method],
     (err, result) => {
       console.log(err);
