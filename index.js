@@ -49,28 +49,6 @@ app.get("/api/get/extra", (req, res) => {
   });
 });
 
-const getTime = () => {
-  // current timestamp in milliseconds
-  let ts = Date.now();
-
-  let date_ob = new Date(ts);
-  let date = date_ob.getDate();
-  let month = date_ob.getMonth() + 1;
-  let year = date_ob.getFullYear();
-  let hours = date_ob.getHours();
-  let minutes = date_ob.getMinutes();
-
-  if (date < 10) date = "0" + date;
-  if (month < 10) month = "0" + month;
-  if (hours < 10) hours = "0" + hours;
-  if (minutes < 10) minutes = "0" + minutes;
-
-  // prints date & time in YYYY-MM-DD format
-  return (
-    date + "-" + month + "-" + year + ":" + "[" + hours + ":" + minutes + "]"
-  );
-};
-
 app.post("/api/insert", (req, res) => {
   var node = req.body;
   var exists = false;
@@ -113,22 +91,28 @@ app.post("/api/insert", (req, res) => {
         }
       );
 
-      let time = getTime();
       let method = "create";
       let changes = `${node.name}`;
 
       //write to edit history
       const sqlInsertHistory =
-        "INSERT INTO `edithistory` (`time`, `author`, `changes`, `method`) VALUES (?,?,?,?);";
+        "INSERT INTO `edithistory` (`time`, `author`, `changes`, `method`) VALUES (now(),?,?,?);";
       db.query(
         sqlInsertHistory,
-        [time, node.author, changes, method],
+        [node.author, changes, method],
         (err, result) => {
           console.log(err);
           console.log(result);
         }
       );
     }
+
+    const sqldeleteold =
+      "delete from `edithistory` where `time` < now() - interval 30 DAY;";
+    db.query(sqldeleteold, (err, result) => {
+      console.log(err);
+      console.log(result);
+    });
   });
 
   res.end();
@@ -144,20 +128,15 @@ app.post("/api/delete", (req, res) => {
     res.end();
   });
 
-  let time = getTime();
   let method = "delete";
 
   //write to edit history
   const sqlInsertHistory =
-    "INSERT INTO `edithistory` (`id`,`time`, `author`, `method`) VALUES (?,?,?,?);";
-  db.query(
-    sqlInsertHistory,
-    [id, time, req.body.author, method],
-    (err, result) => {
-      console.log(err);
-      console.log(result);
-    }
-  );
+    "INSERT INTO `edithistory` (`id`,`time`, `author`, `method`) VALUES (?,now(),?,?);";
+  db.query(sqlInsertHistory, [id, req.body.author, method], (err, result) => {
+    console.log(err);
+    console.log(result);
+  });
 });
 
 app.post("/api/update", (req, res) => {
@@ -184,14 +163,13 @@ app.post("/api/update", (req, res) => {
         console.log(err);
         console.log(result);
 
-        let time = getTime();
         let method = "edit";
         //write to edit history
         const sqlInsertHistory =
-          "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,?,?,?,?);";
+          "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,now(),?,?,?);";
         db.query(
           sqlInsertHistory,
-          [node.id, time, node.author, node.changes, method],
+          [node.id, node.author, node.changes, method],
           (err, result) => {
             console.log(err);
             console.log(result);
@@ -202,6 +180,13 @@ app.post("/api/update", (req, res) => {
       }
     );
   }
+
+  const sqldeleteold =
+    "delete from `edithistory` where `time` < now() - interval 30 DAY;";
+  db.query(sqldeleteold, (err, result) => {
+    console.log(err);
+    console.log(result);
+  });
 });
 
 app.post("/api/updateextra", (req, res) => {
@@ -237,14 +222,13 @@ app.post("/api/updateextra", (req, res) => {
       }
     );
 
-    let time = getTime();
     let method = "editextra";
     //write to edit history
     const sqlInsertHistory =
-      "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,?,?,?,?);";
+      "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,now(),?,?,?);";
     db.query(
       sqlInsertHistory,
-      [node.id, time, node.author, node.changes, method],
+      [node.id, node.author, node.changes, method],
       (err, result) => {
         console.log(err);
         console.log(result);
