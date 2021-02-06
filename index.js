@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
 const multer = require("multer");
+
 const upload = multer({ dest: "/photos/" });
 
 // const db = mysql.createPool({
@@ -33,8 +34,9 @@ app.get("/api/get", (req, res) => {
   });
 });
 
-app.post("/api/upload", upload.single("profileImage"), (req, res) => {
-  console.log(req.file)
+app.post("/api/upload", upload.single("avatar"), function (req, res, next) {
+  console.log("upload api accessed");
+  console.log(req);
 });
 
 app.get("/api/get/edithistory", (req, res) => {
