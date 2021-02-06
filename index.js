@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
+const multer = require("multer");
+const upload = multer({ dest: "/photos/" });
 
 // const db = mysql.createPool({
 //   host: "localhost",
@@ -29,6 +31,10 @@ app.get("/api/get", (req, res) => {
     res.send(result);
     res.end();
   });
+});
+
+app.post("/api/upload", upload.single("profileImage"), (req, res) => {
+  console.log(req.file)
 });
 
 app.get("/api/get/edithistory", (req, res) => {
