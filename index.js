@@ -1,11 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
-const multer = require("multer");
-
-const upload = multer({ dest: "/photos/" });
 
 // const db = mysql.createPool({
 //   host: "localhost",
@@ -21,9 +19,11 @@ const db = mysql.createPool({
   database: "heroku_a335746522f3d45",
 });
 
+app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload());
 
 app.get("/api/get", (req, res) => {
   const sqlSelect = "Select * from familymembers";
@@ -32,11 +32,6 @@ app.get("/api/get", (req, res) => {
     res.send(result);
     res.end();
   });
-});
-
-app.post("/api/upload", upload.single("avatar"), function (req, res, next) {
-  console.log("upload api accessed");
-  console.log(req);
 });
 
 app.get("/api/get/edithistory", (req, res) => {
@@ -51,10 +46,36 @@ app.get("/api/get/edithistory", (req, res) => {
 app.get("/api/get/extra", (req, res) => {
   const sqlSelect = "Select * from extradetails";
   db.query(sqlSelect, (err, result) => {
-    console.log("data sent to frontend");
+    console.log("extra details sent to frontend");
     res.send(result);
     res.end();
   });
+});
+
+app.get("/api/get/photos/user", (req, res) => {
+  try {
+    console.log(req.body.filename)
+    // res.sendFile(__dirname + `/public/${req.body.filename}`);
+  } catch {}
+});
+
+app.post("/api/upload", function (req, res) {
+  if (!req.files) {
+    return res.status(500).send({ msg: "file is not found" });
+  }
+  // accessing the file
+  const myFile = req.files.file; //  mv() method places the file inside public directory
+  myFile.mv(
+    `${__dirname}/public/${req.body.photoname}-${myFile.name}`,
+    function (err) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ msg: "Error occured" });
+      }
+      // returing the response with file path and name
+      return res.send({ name: myFile.name, path: `/${req.body.photoname}` });
+    }
+  );
 });
 
 app.post("/api/insert", (req, res) => {
