@@ -4,6 +4,7 @@ const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const app = express();
 const mysql = require("mysql");
+const fs = require("fs");
 
 // const db = mysql.createPool({
 //   host: "localhost",
@@ -53,10 +54,23 @@ app.get("/api/get/extra", (req, res) => {
 });
 
 app.get("/api/get/photos/user", (req, res) => {
+  // directory path
+  const dir = "./public/";
+  let check = false;
   try {
-    console.log(req.body.filename)
-    // res.sendFile(__dirname + `/public/${req.body.filename}`);
-  } catch {}
+    const files = fs.readdirSync(dir);
+
+    // files object contains all files names
+    // log them on console
+    files.forEach((file) => {
+      if (file.includes(req.query.filename)) {
+        check = true;
+        res.sendFile(__dirname + `/public/${file}`);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.post("/api/upload", function (req, res) {
