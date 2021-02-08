@@ -68,6 +68,7 @@ app.get("/api/get/photos/user", (req, res) => {
         res.sendFile(__dirname + `/public/${file}`);
       }
     });
+    if (!check) res.send("no photos found");
   } catch (err) {
     console.log(err);
   }
