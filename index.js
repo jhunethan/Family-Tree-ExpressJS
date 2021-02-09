@@ -282,6 +282,37 @@ app.post("/api/updateextra", (req, res) => {
   res.end();
 });
 
+//upload photo_id to node
+app.put("/api/updateextra", (req, res) => {
+  let node = req.body;
+  console.log(node);
+  let sqlWrite = "INSERT INTO `extradetails` (`id`, `photo_id`) VALUES (?,?);";
+  //invisible root node is uneditable
+  if (node.id !== 0) {
+    db.query(sqlWrite, [node.id, node.photo_id], (err, result) => {
+      if (err !== null) {
+        let sqlUpdate = "UPDATE `extradetails` SET photo_id = ? WHERE id = ?;";
+        db.query(sqlUpdate, [node.photo_id, node.id]);
+      }
+    });
+
+    let method = "addphoto";
+    let changes = "added photo";
+    //write to edit history
+    const sqlInsertHistory =
+      "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,now(),?,?,?);";
+    db.query(
+      sqlInsertHistory,
+      [node.id, node.author, changes, method],
+      (err, result) => {
+        console.log(err);
+        console.log(result);
+      }
+    );
+  }
+  res.end();
+});
+
 var port = process.env.PORT || 5000;
 app.listen(port, function () {
   console.log("Listening on " + port);
