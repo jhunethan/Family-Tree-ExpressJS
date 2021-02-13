@@ -172,17 +172,17 @@ app.post("/api/delete/image", (req, res) => {
 
   cloudinary.uploader.destroy(req.body.public_id);
 
-  // //write to edit history
-  // const sqlInsertHistory =
-  //   "INSERT INTO `edithistory` (`id`,`time`, `author`,`changes`, `method`) VALUES (?,now(),?,?,?);";
-  // db.query(
-  //   sqlInsertHistory,
-  //   [req.body.id, req.body.author, "removed image", "delete image"],
-  //   (err, result) => {
-  //     console.log(err);
-  //     console.log(result);
-  //   }
-  // );
+  //write to edit history
+  const sqlInsertHistory =
+    "INSERT INTO `edithistory` (`id`,`time`, `author`,`changes`, `method`) VALUES (?,now(),?,?,?);";
+  db.query(
+    sqlInsertHistory,
+    [req.body.id, req.body.author, "removed image", "deleted image"],
+    (err, result) => {
+      console.log(err);
+      console.log(result);
+    }
+  );
 });
 
 app.post("/api/update", (req, res) => {
@@ -287,7 +287,6 @@ app.post("/api/updateextra", (req, res) => {
 //upload photo_id to node
 app.put("/api/updateextra", (req, res) => {
   let node = req.body;
-  console.log(node);
   let sqlWrite = "INSERT INTO `extradetails` (`id`, `photo_id`) VALUES (?,?);";
   //invisible root node is uneditable
   if (node.id !== 0) {
