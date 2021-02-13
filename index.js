@@ -2,9 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
+const cloudinary = require("cloudinary").v2;
 const app = express();
 const mysql = require("mysql");
 const fs = require("fs");
+
+require("dotenv").config();
 
 // const db = mysql.createPool({
 //   host: "localhost",
@@ -18,6 +21,12 @@ const db = mysql.createPool({
   user: "b7c8f3e72edffb",
   password: "d02605ff",
   database: "heroku_a335746522f3d45",
+});
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
 
 app.use(express.static("public"));
@@ -52,46 +61,6 @@ app.get("/api/get/extra", (req, res) => {
     res.end();
   });
 });
-
-// app.get("/api/get/photos/user", (req, res) => {
-//   // directory path
-//   const dir = "./public/";
-//   let check = false;
-//   try {
-//     const files = fs.readdirSync(dir);
-
-//     // files object contains all files names
-//     // log them on console
-//     files.forEach((file) => {
-//       if (file.includes(req.query.filename)) {
-//         check = true;
-//         res.sendFile(__dirname + `/public/${file}`);
-//       }
-//     });
-//     if (!check) res.send("no photos found");
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
-
-// app.post("/api/upload", function (req, res) {
-//   if (!req.files) {
-//     return res.status(500).send({ msg: "file is not found" });
-//   }
-//   // accessing the file
-//   const myFile = req.files.file; //  mv() method places the file inside public directory
-//   myFile.mv(
-//     `${__dirname}/public/${req.body.photoname}-${myFile.name}`,
-//     function (err) {
-//       if (err) {
-//         console.log(err);
-//         return res.status(500).send({ msg: "Error occured" });
-//       }
-//       // returing the response with file path and name
-//       return res.send({ name: myFile.name, path: `/${req.body.photoname}` });
-//     }
-//   );
-// });
 
 app.post("/api/insert", (req, res) => {
   var node = req.body;
@@ -181,6 +150,39 @@ app.post("/api/delete", (req, res) => {
     console.log(err);
     console.log(result);
   });
+});
+
+app.post("/api/delete/image", (req, res) => {
+  let sqlFind = "SELECT photo_id FROM extradetails WHERE id=?";
+  let photo_id_string;
+  db.query(sqlFind, [req.body.id], (err, result) => {
+    console.log(err);
+    console.log(result);
+    //remove public id from front end from list
+    photo_id_string = result[0].photo_id
+      .split(",")
+      .filter((x) => x !== req.body.public_id)
+      .join();
+    let sqlUpdate = "UPDATE `extradetails` SET photo_id = ? WHERE id = ?;";
+    db.query(sqlUpdate, [photo_id_string, req.body.id], (res) => {
+      console.log(res);
+    });
+    res.end();
+  });
+
+  cloudinary.uploader.destroy(req.body.public_id);
+
+  // //write to edit history
+  // const sqlInsertHistory =
+  //   "INSERT INTO `edithistory` (`id`,`time`, `author`,`changes`, `method`) VALUES (?,now(),?,?,?);";
+  // db.query(
+  //   sqlInsertHistory,
+  //   [req.body.id, req.body.author, "removed image", "delete image"],
+  //   (err, result) => {
+  //     console.log(err);
+  //     console.log(result);
+  //   }
+  // );
 });
 
 app.post("/api/update", (req, res) => {
