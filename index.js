@@ -5,7 +5,6 @@ const cors = require("cors");
 const cloudinary = require("cloudinary").v2;
 const app = express();
 const mysql = require("mysql");
-const fs = require("fs");
 
 require("dotenv").config();
 
