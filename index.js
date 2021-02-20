@@ -5,6 +5,7 @@ const cors = require("cors");
 const cloudinary = require("cloudinary").v2;
 const app = express();
 const mysql = require("mysql");
+const fs = require("fs");
 
 require("dotenv").config();
 
@@ -51,6 +52,45 @@ app.get("/api/get/edithistory", (req, res) => {
     res.end();
   });
 });
+
+// app.get("/api/get/photos/user", (req, res) => {
+//   // directory path
+//   const dir = "./public/";
+//   let check = false;
+//   try {
+//     const files = fs.readdirSync(dir);
+//     // files object contains all files names
+//     // log them on console
+//     files.forEach((file) => {
+//       if (file.includes(req.query.filename)) {
+//         check = true;
+//         res.sendFile(__dirname + `/public/${file}`);
+//       }
+//     });
+//     if (!check) res.send("no photos found");
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
+// app.post("/api/upload", function (req, res) {
+//   if (!req.files) {
+//     return res.status(500).send({ msg: "file is not found" });
+//   }
+//   // accessing the file
+//   const myFile = req.files.file; //  mv() method places the file inside public directory
+//   myFile.mv(
+//     `${__dirname}/public/${req.body.photoname}-${myFile.name}`,
+//     function (err) {
+//       if (err) {
+//         console.log(err);
+//         return res.status(500).send({ msg: "Error occured" });
+//       }
+//       // returing the response with file path and name
+//       return res.send({ name: myFile.name, path: `/${req.body.photoname}` });
+//     }
+//   );
+// });
 
 app.get("/api/get/extra", (req, res) => {
   const sqlSelect = "Select * from extradetails";
