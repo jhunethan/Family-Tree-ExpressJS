@@ -36,11 +36,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 
 app.get("/api/get", (req, res) => {
-  const sqlSelect = "Select * from familymembers";
+  var sqlSelect = "Select * from familymembers";
   db.query(sqlSelect, (err, result) => {
     console.log("data sent to frontend");
-    res.send(result);
-    res.end();
+    var data = result;
+    db.query("Select * from extradetails", (err, result) => {
+      console.log("extra details sent to frontend");
+      for (let x = 0; x < result.length; x++) {
+        for (let i = 0; i < data.length; i++) {
+          if (result[x].id === data[i].id) {
+            console.log("matching");
+            data[i].extradetails = result[x];
+          }
+        }
+      }
+      res.send(data);
+    });
   });
 });
 
@@ -91,15 +102,6 @@ app.get("/api/get/edithistory", (req, res) => {
 //     }
 //   );
 // });
-
-app.get("/api/get/extra", (req, res) => {
-  const sqlSelect = "Select * from extradetails";
-  db.query(sqlSelect, (err, result) => {
-    console.log("extra details sent to frontend");
-    res.send(result);
-    res.end();
-  });
-});
 
 app.post("/api/insert", (req, res) => {
   var node = req.body;
