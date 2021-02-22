@@ -278,7 +278,7 @@ app.post("/api/updateextra", (req, res) => {
   let node = req.body;
   console.log(node);
   let sqlWrite =
-    "INSERT INTO `extradetails` (`id`, `location`, `extranames`, `fblink`, `description`, `birthplace`) VALUES (?,?,?,?,?,?);";
+    "INSERT INTO `extradetails` (`id`, `location`, `extranames`, `fblink`, `profession`, `description`, `birthplace`) VALUES (?,?,?,?,?,?,?);";
   //invisible root node is uneditable
   if (node.id !== 0) {
     db.query(
@@ -288,17 +288,19 @@ app.post("/api/updateextra", (req, res) => {
         node.location,
         node.extranames,
         node.fblink,
+        node.profession,
         node.description,
         node.birthplace,
       ],
       (err, result) => {
         if (err !== null) {
           let sqlUpdate =
-            "UPDATE `extradetails` SET location = ?, extranames = ?, fblink = ?, description = ?, birthplace = ? WHERE id = ?;";
+            "UPDATE `extradetails` SET location = ?, extranames = ?, fblink = ?, profession = ?, description = ?, birthplace = ? WHERE id = ?;";
           db.query(sqlUpdate, [
             node.location,
             node.extranames,
             node.fblink,
+            node.profession,
             node.description,
             node.birthplace,
             node.id,
