@@ -45,7 +45,6 @@ app.get("/api/get", (req, res) => {
       for (let x = 0; x < result.length; x++) {
         for (let i = 0; i < data.length; i++) {
           if (result[x].id === data[i].id) {
-            console.log("matching");
             data[i].extradetails = result[x];
           }
         }
@@ -230,21 +229,22 @@ app.post("/api/update", (req, res) => {
   let node = req.body;
   console.log(node);
   let sqlUpdate =
-    "UPDATE `familymembers` SET generation = ?, name = ?, birthdate = ?, pid = ?, isPartner = ?, parent = ?, partner = ? WHERE id = ?";
+    "UPDATE `familymembers` SET generation = ?, name = ?, birthdate = ?, deathdate = ?, pid = ?, isPartner = ?, parent = ?, partner = ? WHERE id = ?";
 
   //invisible root node is uneditable
   if (node.id !== 0) {
     db.query(
       sqlUpdate,
       [
-        node.generation,
-        node.name,
-        node.birthdate,
-        node.pid,
-        node.isPartner,
-        node.parent,
-        node.partner,
-        node.id,
+        node.input.generation,
+        node.input.name,
+        node.input.birthdate,
+        node.input.deathdate,
+        node.input.pid,
+        node.input.isPartner,
+        node.input.parent,
+        node.input.partner,
+        node.input.id,
       ],
       (err, result) => {
         console.log(err);
@@ -256,7 +256,7 @@ app.post("/api/update", (req, res) => {
           "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,now(),?,?,?);";
         db.query(
           sqlInsertHistory,
-          [node.id, node.author, node.changes, method],
+          [node.input.id, node.author, node.changes, method],
           (err, result) => {
             console.log(err);
             console.log(result);
@@ -276,6 +276,7 @@ app.post("/api/update", (req, res) => {
   });
 });
 
+//update extra details
 app.post("/api/updateextra", (req, res) => {
   let node = req.body;
   console.log(node);
@@ -287,24 +288,24 @@ app.post("/api/updateextra", (req, res) => {
       sqlWrite,
       [
         node.id,
-        node.location,
-        node.extranames,
-        node.fblink,
-        node.profession,
-        node.description,
-        node.birthplace,
+        node.input.location,
+        node.input.extranames,
+        node.input.fblink,
+        node.input.profession,
+        node.input.description,
+        node.input.birthplace,
       ],
       (err, result) => {
         if (err !== null) {
           let sqlUpdate =
             "UPDATE `extradetails` SET location = ?, extranames = ?, fblink = ?, profession = ?, description = ?, birthplace = ? WHERE id = ?;";
           db.query(sqlUpdate, [
-            node.location,
-            node.extranames,
-            node.fblink,
-            node.profession,
-            node.description,
-            node.birthplace,
+            node.input.location,
+            node.input.extranames,
+            node.input.fblink,
+            node.input.profession,
+            node.input.description,
+            node.input.birthplace,
             node.id,
           ]);
         }
