@@ -149,10 +149,10 @@ app.post("/api/insert", (req, res) => {
 
       //write to edit history
       const sqlInsertHistory =
-        "INSERT INTO `edithistory` (`time`, `author`, `changes`, `method`) VALUES (now(),?,?,?);";
+        "INSERT INTO `edithistory` (`time`, `author`, `changes`, `method`,`name`) VALUES (now(),?,?,?,?);";
       db.query(
         sqlInsertHistory,
-        [req.body.author, changes, method],
+        [req.body.author, changes, method, node.name],
         (err, result) => {
           console.log(err);
           console.log(result);
@@ -189,12 +189,10 @@ app.post("/api/delete", (req, res) => {
     res.end();
   });
 
-  let method = "delete";
-
   //write to edit history
   const sqlInsertHistory =
-    "INSERT INTO `edithistory` (`id`,`time`, `author`, `method`) VALUES (?,now(),?,?);";
-  db.query(sqlInsertHistory, [id, req.body.author, method], (err, result) => {
+    "INSERT INTO `edithistory` (`id`,`time`, `author`, `method`,`name`) VALUES (?,now(),?,?,?);";
+  db.query(sqlInsertHistory, [id, req.body.author, "delete", req.body.name], (err, result) => {
     console.log(err);
     console.log(result);
   });
@@ -222,10 +220,10 @@ app.post("/api/delete/image", (req, res) => {
 
   //write to edit history
   const sqlInsertHistory =
-    "INSERT INTO `edithistory` (`id`,`time`, `author`,`changes`, `method`) VALUES (?,now(),?,?,?);";
+    "INSERT INTO `edithistory` (`id`,`time`, `author`,`changes`, `method`, `name`) VALUES (?,now(),?,?,?,?);";
   db.query(
     sqlInsertHistory,
-    [req.body.id, req.body.author, "removed image", "deleted image"],
+    [req.body.id, req.body.author, "removed image", "deleted image", req.body.name],
     (err, result) => {
       console.log(err);
       console.log(result);
@@ -261,10 +259,10 @@ app.post("/api/update", (req, res) => {
         let method = "edit";
         //write to edit history
         const sqlInsertHistory =
-          "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,now(),?,?,?);";
+          "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`,`name`) VALUES (?,now(),?,?,?,?);";
         db.query(
           sqlInsertHistory,
-          [node.input.id, node.author, node.changes, method],
+          [node.input.id, node.author, node.changes, method,node.input.name],
           (err, result) => {
             console.log(err);
             console.log(result);
@@ -323,10 +321,10 @@ app.post("/api/updateextra", (req, res) => {
     let method = "editextra";
     //write to edit history
     const sqlInsertHistory =
-      "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,now(),?,?,?);";
+      "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`,`name`) VALUES (?,now(),?,?,?,?);";
     db.query(
       sqlInsertHistory,
-      [node.id, node.author, node.changes, method],
+      [node.id, node.author, node.changes, method, node.name],
       (err, result) => {
         console.log(err);
         console.log(result);
@@ -353,10 +351,10 @@ app.put("/api/updateextra", (req, res) => {
     let changes = "added photo";
     //write to edit history
     const sqlInsertHistory =
-      "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`) VALUES (?,now(),?,?,?);";
+      "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`,`name`) VALUES (?,now(),?,?,?,?);";
     db.query(
       sqlInsertHistory,
-      [node.id, node.author, changes, method],
+      [node.id, node.author, changes, method, node.name],
       (err, result) => {
         console.log(err);
         console.log(result);
