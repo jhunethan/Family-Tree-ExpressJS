@@ -103,7 +103,7 @@ app.get("/api/get/edithistory", (req, res) => {
 // });
 
 app.post("/api/insert", (req, res) => {
-  var node = req.body;
+  var node = req.body.input;
   var exists = false;
   const sqlSelect = "SELECT * from familymembers WHERE name = ?";
   db.query(sqlSelect, [node.name], (err, result) => {
@@ -152,7 +152,7 @@ app.post("/api/insert", (req, res) => {
         "INSERT INTO `edithistory` (`time`, `author`, `changes`, `method`) VALUES (now(),?,?,?);";
       db.query(
         sqlInsertHistory,
-        [node.author, changes, method],
+        [req.body.author, changes, method],
         (err, result) => {
           console.log(err);
           console.log(result);
