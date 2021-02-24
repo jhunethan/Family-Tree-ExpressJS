@@ -178,6 +178,14 @@ app.post("/api/delete", (req, res) => {
   db.query(sqlDelete, [id], (err, result) => {
     console.log(err);
     console.log(result);
+
+    //update children
+    let sqlUpdateChild =
+      "UPDATE `familymembers` SET pid = 0, parent = null, isPartner = 0, partner = null WHERE pid = ?";
+    db.query(sqlUpdateChild, [id], (err, result) => {
+      console.log(err);
+      console.log(result);
+    });
     res.end();
   });
 
