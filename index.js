@@ -294,24 +294,24 @@ app.post("/api/updateextra", (req, res) => {
       sqlWrite,
       [
         node.id,
-        node.input.location,
-        node.input.extranames,
-        node.input.fblink,
-        node.input.profession,
-        node.input.description,
-        node.input.birthplace,
+        node.input.extradetails.location,
+        node.input.extradetails.extranames,
+        node.input.extradetails.fblink,
+        node.input.extradetails.profession,
+        node.input.extradetails.description,
+        node.input.extradetails.birthplace,
       ],
       (err, result) => {
         if (err !== null) {
           let sqlUpdate =
             "UPDATE `extradetails` SET location = ?, extranames = ?, fblink = ?, profession = ?, description = ?, birthplace = ? WHERE id = ?;";
           db.query(sqlUpdate, [
-            node.input.location,
-            node.input.extranames,
-            node.input.fblink,
-            node.input.profession,
-            node.input.description,
-            node.input.birthplace,
+            node.input.extradetails.location,
+            node.input.extradetails.extranames,
+            node.input.extradetails.fblink,
+            node.input.extradetails.profession,
+            node.input.extradetails.description,
+            node.input.extradetails.birthplace,
             node.id,
           ]);
         }
