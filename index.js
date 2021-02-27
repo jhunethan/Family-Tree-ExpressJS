@@ -162,7 +162,7 @@ app.post("/api/insert", (req, res) => {
     }
 
     const sqldeleteold =
-      "delete from `edithistory` where `time` < now() - interval 30 DAY;";
+      "delete from `edithistory` where `time` < now() - interval 14 DAY;";
     db.query(sqldeleteold, (err, result) => {
       console.log(err);
       console.log(result);
@@ -276,7 +276,7 @@ app.post("/api/update", (req, res) => {
   }
 
   const sqldeleteold =
-    "delete from `edithistory` where `time` < now() - interval 30 DAY;";
+    "delete from `edithistory` where `time` < now() - interval 14 DAY;";
   db.query(sqldeleteold, (err, result) => {
     console.log(err);
     console.log(result);
