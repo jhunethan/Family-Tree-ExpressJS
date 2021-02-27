@@ -126,10 +126,11 @@ app.post("/api/insert", (req, res) => {
       if (node.pid === "") node.pid = 0;
 
       const sqlInsert =
-        "INSERT INTO `familymembers` (`pid`, `generation`, `name`, `birthdate`, `parent`, `partner`, `isPartner`) VALUES (?,?,?,?,?,?,?);";
+        "INSERT INTO `familymembers` (`id`,`pid`, `generation`, `name`, `birthdate`, `parent`, `partner`, `isPartner`) VALUES (?,?,?,?,?,?,?,?);";
       db.query(
         sqlInsert,
         [
+          node.id,
           node.pid,
           node.generation,
           node.name,
