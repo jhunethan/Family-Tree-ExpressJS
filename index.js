@@ -187,16 +187,24 @@ app.post("/api/delete", (req, res) => {
       console.log(err);
       console.log(result);
     });
+
+    sqlDelete = "DELETE  FROM `extradetails` WHERE id = ?";
+    db.query(sqlDelete, [id]);
+
     res.end();
   });
 
   //write to edit history
   const sqlInsertHistory =
     "INSERT INTO `edithistory` (`id`,`time`, `author`, `method`,`name`) VALUES (?,now(),?,?,?);";
-  db.query(sqlInsertHistory, [id, req.body.author, "delete", req.body.name], (err, result) => {
-    console.log(err);
-    console.log(result);
-  });
+  db.query(
+    sqlInsertHistory,
+    [id, req.body.author, "delete", req.body.name],
+    (err, result) => {
+      console.log(err);
+      console.log(result);
+    }
+  );
 });
 
 app.post("/api/delete/image", (req, res) => {
@@ -224,7 +232,13 @@ app.post("/api/delete/image", (req, res) => {
     "INSERT INTO `edithistory` (`id`,`time`, `author`,`changes`, `method`, `name`) VALUES (?,now(),?,?,?,?);";
   db.query(
     sqlInsertHistory,
-    [req.body.id, req.body.author, "removed image", "deleted image", req.body.name],
+    [
+      req.body.id,
+      req.body.author,
+      "removed image",
+      "deleted image",
+      req.body.name,
+    ],
     (err, result) => {
       console.log(err);
       console.log(result);
@@ -263,7 +277,7 @@ app.post("/api/update", (req, res) => {
           "INSERT INTO `edithistory` (`id`, `time`, `author`, `changes`, `method`,`name`) VALUES (?,now(),?,?,?,?);";
         db.query(
           sqlInsertHistory,
-          [node.input.id, node.author, node.changes, method,node.input.name],
+          [node.input.id, node.author, node.changes, method, node.input.name],
           (err, result) => {
             console.log(err);
             console.log(result);
