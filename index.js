@@ -63,44 +63,59 @@ app.get("/api/get/edithistory", (req, res) => {
   });
 });
 
-// app.get("/api/get/photos/user", (req, res) => {
-//   // directory path
+app.get("/api/get/photos/user", (req, res) => {
+  // directory path
+  const dir = "./public/";
+  let check = false;
+  try {
+    const files = fs.readdirSync(dir);
+    // files object contains all files names
+    // log them on console
+    files.forEach((file) => {
+      if (file.split("-")[0] === (req.query.id)) {
+        check = true;
+        res.sendFile(__dirname + `/public/${file}`);
+      }
+    });
+    if (!check) res.send("no photos found");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// app.get("/api/get/photos", (req, res) => {
 //   const dir = "./public/";
-//   let check = false;
+//   var package = {};
 //   try {
 //     const files = fs.readdirSync(dir);
-//     // files object contains all files names
-//     // log them on console
 //     files.forEach((file) => {
-//       if (file.includes(req.query.filename)) {
-//         check = true;
-//         res.sendFile(__dirname + `/public/${file}`);
-//       }
+//       package[package.length]=fs.readFileSync(__dirname + `/public/${file}`);
 //     });
-//     if (!check) res.send("no photos found");
-//   } catch (err) {
-//     console.log(err);
-//   }
+//     res.send(package)
+//   } catch (error){console.log(error)}
 // });
 
-// app.post("/api/upload", function (req, res) {
-//   if (!req.files) {
-//     return res.status(500).send({ msg: "file is not found" });
-//   }
-//   // accessing the file
-//   const myFile = req.files.file; //  mv() method places the file inside public directory
-//   myFile.mv(
-//     `${__dirname}/public/${req.body.photoname}-${myFile.name}`,
-//     function (err) {
-//       if (err) {
-//         console.log(err);
-//         return res.status(500).send({ msg: "Error occured" });
-//       }
-//       // returing the response with file path and name
-//       return res.send({ name: myFile.name, path: `/${req.body.photoname}` });
-//     }
-//   );
-// });
+app.post("/api/upload", function (req, res) {
+  if (!req.files) {
+    return res.status(500).send({ msg: "file is not found" });
+  }
+  // accessing the file
+  const myFile = req.files.file; //  mv() method places the file inside public directory
+  myFile.mv(
+    `${__dirname}/public/${req.body.id}-${myFile.name}`,
+    function (err) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ msg: "Error occured" });
+      }
+      // returing the response with file path and name
+      return res.send({
+        name: myFile.name,
+        path: `/${req.body.id}-${myFile.name}`,
+      });
+    }
+  );
+});
 
 app.post("/api/insert", (req, res) => {
   var node = req.body.input;
