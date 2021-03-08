@@ -72,7 +72,7 @@ app.get("/api/get/photos/user", (req, res) => {
     // files object contains all files names
     // log them on console
     files.forEach((file) => {
-      if (file.split("-")[0] === (req.query.id)) {
+      if (file.split("-")[0] === req.query.id) {
         check = true;
         res.sendFile(__dirname + `/public/${file}`);
       }
@@ -317,7 +317,7 @@ app.post("/api/updateextra", (req, res) => {
   let node = req.body;
   console.log(node);
   let sqlWrite =
-    "INSERT INTO `extradetails` (`id`, `location`, `extranames`, `fblink`, `profession`, `description`, `birthplace`,`maidenname`) VALUES (?,?,?,?,?,?,?,?);";
+    "INSERT INTO `extradetails` (`id`, `location`, `extranames`, `fblink`, `profession`, `description`, `birthplace`,`maidenname`,`languages`) VALUES (?,?,?,?,?,?,?,?,?);";
   //invisible root node is uneditable
   if (node.id !== 0) {
     db.query(
@@ -330,12 +330,13 @@ app.post("/api/updateextra", (req, res) => {
         node.input.extradetails.profession,
         node.input.extradetails.description,
         node.input.extradetails.birthplace,
-        node.input.extradetails.maidenname
+        node.input.extradetails.maidenname,
+        node.input.extradetails.languages,
       ],
       (err, result) => {
         if (err !== null) {
           let sqlUpdate =
-            "UPDATE `extradetails` SET location = ?, extranames = ?, fblink = ?, profession = ?, description = ?, birthplace = ?, maidenname = ? WHERE id = ?;";
+            "UPDATE `extradetails` SET location = ?, extranames = ?, fblink = ?, profession = ?, description = ?, birthplace = ?, maidenname = ?, languages = ? WHERE id = ?;";
           db.query(sqlUpdate, [
             node.input.extradetails.location,
             node.input.extradetails.extranames,
@@ -344,6 +345,7 @@ app.post("/api/updateextra", (req, res) => {
             node.input.extradetails.description,
             node.input.extradetails.birthplace,
             node.input.extradetails.maidenname,
+            node.input.extradetails.languages,
             node.id,
           ]);
         }
