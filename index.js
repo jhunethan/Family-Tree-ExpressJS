@@ -42,13 +42,15 @@ app.get("/api/get", (req, res) => {
     var data = result;
     db.query("Select * from extradetails", (err, result) => {
       console.log("extra details sent to frontend");
-      for (let x = 0; x < result.length; x++) {
-        for (let i = 0; i < data.length; i++) {
-          if (result[x].id === data[i].id) {
-            data[i].extradetails = result[x];
+      try {
+        for (let x = 0; x < result.length; x++) {
+          for (let i = 0; i < data.length; i++) {
+            if (result[x].id === data[i].id) {
+              data[i].extradetails = result[x];
+            }
           }
         }
-      }
+      } catch {}
       res.send(data);
     });
   });
